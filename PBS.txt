@@ -1,0 +1,186 @@
+what is jobs ? request for nodes,time when to run etc. an user request for a job.   
+Array job : special type of jobs where it is going to run multiple sub-jobs as a part of this job.
+
+all state transitions on that queue only. default queue if queye not provided.
+queues based on priorities as well. job submit->goes to queue. 
+
+client communicates with the server
+
+PBS server: serves request fro the client (interface to the client / user/ jobs)
+Server will assign the job to that queue.
+Server and scheduler keep
+scheduler depending on the amount of resources and priority, will schedule the jobs.
+
+MoM will see what needs to be done , what needs to be run, will do the process management for this job.
+MoM will monitor those job processes with the kernel
+MoM will tell the server that so and so is the process id.
+
+Server will make a note of that, will change the state of the job 
+so next time an user tells something, it will show that the job is running.
+
+Server will keep updating the information like how much time for it has run, what is the state of the job right now, etc.
+Mom might send this information every 10 seconds or so, the server will keep updating its structures to keep a track of the same.
+
+periodically the scheduler will also ask for resources, which process to run etc.
+
+mom going to understand the resources etc.
+
+server and mom on other nodes generally.
+
+mom will run on the execution nodes, server on the serving nodes.
+
+
+job 4 nodes, scheduler find 4 nodes.
+one node is mother node.other sister mode. server going to communicate with other node.
+communication may break between some nodes.
+
+
+
+cat /etc/*release*   :   will show the current OS.
+two ways to distribute softwares 
+RPM : redhat packahge manager. 
+DBN : DBN package manager. dpkg
+
+build RPM and convert it to dpkg.
+
+
+
+cd PBS_pro_2022 : various RPM files depening on comunication, client etc.
+rmp -i pbspro-server-2022.0.0
+
+/etc/init.d/pbs start : shell script to start.
+
+/etc/init.d/pbs status : will give the status.
+
+a conf file, which things are supposed to run. vi /etc/pbs.conf
+since all are 1, so all will run.
+
+
+
+COMMANDS : 
+rpm -i pbspro-server-2022.0.0.20220311133859-0.el7.x86_64.rpm
+# /etc/init.d/pbs start
+# /etc/init.d/pbs status
+# vi /etc/pbs.conf
+
+
+print server : what all queues, what configurations we have done till now
+
+print scheduler : what the scheduler configuration
+
+
+
+queue type : execution, jobs on this queue should be executed, goes to scheduler
+enabled : user can submit jobs to this queue.
+started : jobs scheduled on this can be set to run.
+
+scheduler_iteration = 600 seconds. (to scheduler period)
+
+
+what all resources :
+pbsnodes -av : which nodes are there/configured on this system
+ 		state will tell which node is free.
+
+qsub -- /bin/sleep 100 : its going to sleep. sleep job.  /bin/sleep is the executable.  //no arguments provided, it means it will take the number of cpu to be one by default.
+
+
+root cannnot submit jobs.
+
+qstat -s : about the running processes.
+
+/etc/init.d/pbs restart : restart
+
+scheduling cucle is triggered when aprocess is finished
+
+qstat -f : more info on jobs.
+
+
+tracejob id : will give u the state of job, how time it has run etc.
+
+
+for multinode job, one of them the leader and other followers. leader is called mother superior other are called sister mother.
+all the nodes are connected to server. for a job, one of the job is mother superior and other children.
+
+server will take info from mother node, mother will take info from sister nodes.
+
+Multiple jobs at a node. but we can set this limit to only one.
+
+
+
+cat /etc/pbs.conf
+    logs will basically give you the flow. (like the sequence of events that happened.)
+	PBS_EXEC and PBS_HOME : ls -l /opt/pbs/ : will give files related to the exec.
+		PBS_HOME : some files of HOME.
+
+		all the jobs will be stored on daemon.
+
+
+		datastore: all jobs process related info.
+
+	ls -l /var/spool/pbs/server_logs/20220
+	...mom_logs... : related to mom,etc. what process there etc.
+    look at logs to see what happened,where went wrong etc.
+
+
+ps -elf | grep pbs : pbs related processes.
+
+
+
+
+qsub -lselect=2:ncpus=2 .. /bin/sleep 1111   (2 cpus i got)  # 2chunks, each of 2 cpus
+
+pbsnodes -av : the list of process running.
+
+also, we can ask for resources memory wise also, like 1 GB for one chunk and 2 GB for another
+
+for everynode , we create a resouce.
+many resources an admin will create on their own.
+
+Reservations :  Job will run whenever its time comes, or resources are available.
+		User does not know when job is going to run.
+		we resever particular amount of resources on nodes for particular amount of time
+		reservation has separate queye.
+		nothing will be scheduled on those reources when it is running, since it is reserved.
+		
+pbs_rsub -R 006 -E 0008 : reservation
+pbs_rstat : log of this reservation.
+qsub -q R4 -- /bin/sleep 111
+
+pbs_rdel : delete reservation.
+
+
+
+
+
+
+
+pmgs : 
+qstat : look at job
+qdel : delete job
+pbs_rsub : 
+pbs_rstat : status of reservation
+pbs_rdel : delete reservation.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
