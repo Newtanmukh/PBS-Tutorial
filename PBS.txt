@@ -238,7 +238,10 @@ submit job with 2 ncpus :
 PBS Only takes account of jobs which are in running or queded state
 
 
-sudo qmgr -c"set server job_history_enabled=true" 
+sudo qmgr -c"set server job_history_enabled=true" // by default config we wont be able to see f state.
+//after this run qstat -x.
+
+//JOB HISTORY DURATION : will say that for how long the history there in the qstat -x.
 
 
 qstat -Bf :
@@ -306,6 +309,100 @@ Ststic resource comes under control of PBS, dynamic not under PBS
 qsub -l select=5:ncpus=2:mem=1gb+5:ncpus=6:mem=4gb -- /bin/sleep 10000
 
 job wide resours: applies to entire job.
+
+
+
+
+#####################################################################################################################
+
+ALWAYS recommended to run the job as user.
+
+submit as a root : qmgr -c"s s acl_roots=root@*"
+
+now we can submit job from the root.
+
+
+INTERACTIVE Job : Get an terminal to interact.
+
+qstat -sw : show status 'widely', -w will give more information.
+
+
+subjobs: -t : qstat -swt
+
+array job : qsub -J 51-54 -- bin/sleeep 100 : 3subjobs, indics will be 51 52 53
+
+qsub -I : submit interactive job. (no limit for interactive job.)
+
+exit : to exit from interactive job., that interactive job has completed. interactive jobs to see configuration etc. rarely used.
+
+
+
+
+
+qmgr -c"l r color" : list resource color.
+
+//create red color using the qmgr command.
+
+qsub -lcolor=red -- /bin/sleep 10 : resource color =red.
+//now even if we set it to blue, it will run. we need to let this know to scheduler as well.
+cat /etc/pbs.conf : configuration files
+
+mom_prev will have mom configuration files.
+
+vi sched_config  : add the avaliable resource as color : red.
+then pkill -HUP pbs_sched. (to reflect the changes.)
+
+
+
+qsub -lselect=1:ncpus=4:color=red -- /bin/sleep 10  		//number of chunks/nodes we need for the job
+
+
+qmgr -c"c n node_name"  : will add/create this node
+
+MULTI NODE JOB :
+
+qsub -lselect=2:ncpus=1 -- /bin/sleep 10
+
+qmgr -c"set node node_name resourcesavailable.ncpus=1"
+
+cluster is multiple MoMs.
+
+in my cluster 2 availabke cpus are available. (total cpus in each node in pbsnodes av.)
+
+Scheduling cycle trigger : saying to scheduler that like some changes and look into it.
+
+*** Look into this : starting scheduling cycle(considered 28 but couldnt run and thus left) and ending scheduling . once we change the resources, the scheduling cycle is 
+change the resouces: either wait for cycle for next cycle or wait for next cycle
+
+NOTE  :   check for error and output file as well in the qstat thing.
+
+
+
+
+tracejob job_id : info about the job.
+L S M A  : l for scheduler, S for server, A for accounting M for mom.
+
+
+Exit status = 0 : job has completed successfully without any interrupt.
+
+qdel -Wforce job_id : forcefully delete the job.
+
+
+job in e state : cannot delete a job normally. we need to use -Wforce as well.
+
+
+
+alter anything related to job. : qalter -N test 34 : change the job name of job id 34 to test
+
+
+qalter -lncpus=2 36
+//initially ncpus was 4 and available was 3. so it didnt ran and was in queue state.now to reflect and let the server true, set the scheulding triggeer:
+TRIGGER : qmgr -c"s s scheduling=true"
+
+
+
+ 
+
 
 
 
