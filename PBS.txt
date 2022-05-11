@@ -164,6 +164,149 @@ pbs_rdel : delete reservation.
 
 
 
+###################################################################################################################################################################################################
+
+
+ PBS_SCF : stores the scp path, like where to copy and so on.
+ PBS_HOME : config file 
+
+
+
+
+
+
+submit a job in pbs : qsub to submit a job in pbs.
+
+submit simple job : qsub -- /bin/sleep 10
+
+        whole string is the jobid
+
+status of job : qstat : list of all the jobs
+
+qdel 2 : delete the job of job id 2
+
+qstat : status of job
+
+vi job.scr
+
+qsub job.scr : submit job which is inside the job script job.scr
+
+user submit a job to server, server returns the jobid to the user
+scheduler will have info 
+
+pbsnodes -av : listyou all the MOMS in the cluster.
+	     
+JOB Attributes : qstat -f job-id (if only one job then no need to mention the job-id)
+
+qsub : no argument, it will take 1 cpu from 1 chunk.(1 node as well)
+
+qstat -sw : along with running info show the resources cosuming as well.
+
+
+
+
+
+qmgr : queue manager
+
+used to set the attributes of nodes, server etc.
+
+qmgr -c"action object attribute=value"
+
+	action: set unset list print create
+
+	object : server sched node hook
+
+	sttributes: depends.
+
+
+qmgr -c"set node xarm-01-s15 resources_available.ncpus=2"
+
+
+now, it can run two jobs at a time !!!! (inside a single node itself !!)
+
+
+submit job with 2 ncpus sleep job of 30 seconds
+submit job with name
+
+SPECIFYING WITH RESOURCES : 
+submit job with 2 ncpus :
+	#qsub --help (works like a man )
+	qsub -l ncpus=2 -- /bin/sleep 30
+
+
+
+PBS Only takes account of jobs which are in running or queded state
+
+
+sudo qmgr -c"set server job_history_enabled=true" 
+
+
+qstat -Bf :
+	list the server attributes # please see above. job_history enabled is there as well. similary u can set others as well
+
+qstat -x : will show the histroy jobs(which has finished)
+
+########### job substates (from BOOK)
+
+qstat -fx 23 : job attributes of the finished job with id 23 (-f stands for full info, x for history)
+
+
+
+
+JOB ARRAY : (parent job and multiple subjobs)
+qsub -J 1-4 -- bin/sleeep 100
+
+(NOTE:  [] in job id, it means job array. can check this using the qstat command.)
+
+state different for regular job
+
+check other subjobs : qstat -swt (option t as well for subjobs)
+
+qdel 23[] : delete the job which is an array
+
+each subjob will behave like normal job
+
+30[],30[1],30[2]  : first is parent,next are children
+
+qstat -f 30[1] : info about the first subjob
+
+state x in qstat : it has been deleted.
+
+
+
+###################################################################################################################
+
+PBS RESOURCES : 
+
+things such as CPIs, memory,app licences etc. 
+whether a machine is dedicated to a project or not.
+
+two types of resurces: build in and custom resources.
+
+
+
+custom resouces : resources that PBS defines for some system
+
+scheduable resource : PBS will consider that while sheduling
+
+server resource : availanle at server resource 
+
+queue level resource : only that job resource.
+
+each part of job at one node is called chunk.
+
+qsub -l select=1:ncpus=2:mem=1gb -- /bin/sleep 100   //each one is a chunk, give me 1 node(chunk)
+
+consumable and nonconsumable resources : one that is consumed as more jobs are scheduled is consumable, example ncpus
+
+example of nonconsumable : walltime (it is the time for which a job runs)
+
+Ststic resource comes under control of PBS, dynamic not under PBS
+
+qsub -l select=5:ncpus=2:mem=1gb+5:ncpus=6:mem=4gb -- /bin/sleep 10000
+
+job wide resours: applies to entire job.
+
 
 
 
