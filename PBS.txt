@@ -400,18 +400,55 @@ qalter -lncpus=2 36
 TRIGGER : qmgr -c"s s scheduling=true"
 
 
+############################################################################################################################################################
 
+
+for a dynamic resource(value not known).
+
+scheduler runs in a loop. inside each loop it start ups, performs all of itsw ork and then stop.
+
+pbs_comm has no communocatip with the user.
+
+schdeuling cycle : jobs, cluster respuirces and policies and other data goes from server to scheduler. also mapping of jobs (like which node allocated to which job.)
+
+reservation jobs has the highest priority.
+
+reservation goes to degraded state incase one node goes down.: scheduler schedules it and will find another node for it. sc is triggered
  
 
+top job : hiisher priprity job which is next to run according to execution policy.
+
+filler job : filler jobs.when backfilling is being used.
+
+preemptiom " high prio job causes the suspension of low pio job by scheduler.
+smaller prio job will get suspended to make way for higher prio jobs
+
+Job states : queued running suspended held eited/deleted
+
+small
+
+    place=scatter : do not place more than one job at one node.
+
+	place = pack : all 4 chunkss in one node only.
 
 
 
+group=dyna : place my jobs on node only where dyna=true.
 
 
 
+qsub -l select=4:ncpus=2:mem=1gb:foo1=10 -l place=scatter job.script
+qsub -l select=4:ncpus=2:mem=1gb:foo1=10 -l place=scatter:excl job.script
+qsub -l select=4:ncpus=2:mem=1gb:foo1=10 -l place=scatter:shared job.script
+qsub -l select=4:ncpus=2:mem=1gb:foo1=10 -l place=scatter:shared:group=dyna job.script
 
+qsub -l place=[ arrangement ][: sharing ][: grouping] job.script
 
-
+n1 dyna=True --- j1
+n2 dyna=True --- j1
+n3
+n4 dyna=True --- j1
+n5 dyna=True --- j1
 
 
 
