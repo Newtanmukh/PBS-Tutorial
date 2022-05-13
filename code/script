@@ -1,0 +1,4 @@
+#!/bin/bash
+gcc -I/usr/include/python2.7 code.c -lpython2.7  -o output
+./output
+rm ./output

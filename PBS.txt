@@ -450,9 +450,21 @@ n3
 n4 dyna=True --- j1
 n5 dyna=True --- j1
 
+########################################################################################################################
+
+vnode is like subset of node. within a physical node many vnodes.
+
+pbs_mom -s
 
 
+ANONYMOUS : number of all '.pub' files inside the /etc folder recursively.
+		COMMAND    :     ls -R -C -1 | grep .pub | wc -w 
 
+
+########################################################################################################################
+
+
+job_sort_key : "ncpus HIGH" : sort jobs by in decreasing order of the number of cpus required.
 
 
 

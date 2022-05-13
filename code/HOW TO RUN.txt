@@ -1,0 +1,6 @@
+1. ensure that python 2.7 is installed there on the machine. IT WILL NOT RUN with any other python version. install it using : 	
+		sudo apt-get install python2.7-dev
+
+2. run the script using ./script in the terminal. 
+
+3. to change the frequency of restart of the interpreter, simply change the number inside the sleep().
