@@ -1,5 +1,5 @@
 
-#include <python2.7/Python.h>
+#include <python3.9/Python.h>
 #include <sys/wait.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -57,15 +57,15 @@ printf("\n");
 printf("\n");
 int i;
 
-for(i=0;i<200;i++){
+for(i=0;i<300;i++){
 
    start_interpreter();
   PyRun_SimpleString("from time import time,ctime\n"
-                     "print 'Today is',ctime(time())\n");
+                     "print ('Today is ctime(time())')\n");
   PyRun_SimpleString("from time import time,ctime\n"
-                     "print 'Today is',ctime(time())\n");
+                     "print ('Today is ctime(time())')\n");
   PyRun_SimpleString("from time import time,ctime\n"
-                     "print 'Today is',ctime(time())\n");  
+                    "print ('Today is ctime(time())')\n");
   PyRun_SimpleString("import sqlite3\n");
   PyRun_SimpleString("conn = sqlite3.connect('customer.db')\n");  
   PyRun_SimpleString("c = conn.cursor()\n");
@@ -82,15 +82,15 @@ for(i=0;i<200;i++){
   		     		      
 	
   //PyRun_SimpleString("import matplotlib.pyplot as plt\n");   
-  PyRun_SimpleString("import CGIHTTPServer\n");     
+      
   PyRun_SimpleString("import cmath\n");              
                      printf("\n");
                      print_memory();
                      printf("\n");
   PyRun_SimpleString("import hashlib\n");   
   
-  PyRun_SimpleString("import htmllib\n"); 
-  PyRun_SimpleString("import httplib\n");  
+  
+  
      PyRun_SimpleString("import readline\n");
   PyRun_SimpleString("import subprocess\n");
   PyRun_SimpleString("import string\n");      
@@ -98,7 +98,7 @@ for(i=0;i<200;i++){
   close_interpreter();
   
   printf("\n");
-  sleep(3);
+  sleep(6);
   }
   printf("\n");
   printf("\n");

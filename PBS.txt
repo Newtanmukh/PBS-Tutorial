@@ -467,8 +467,98 @@ ANONYMOUS : number of all '.pub' files inside the /etc folder recursively.
 job_sort_key : "ncpus HIGH" : sort jobs by in decreasing order of the number of cpus required.
 
 
+########################################################################################################################
+
+Reservation : we dedicate certain amount of timeslot for running jobs.
 
 
+Advanced reservation :
+pbs_rsub -R 0109 -E 0117   //
+
+pbs_rstat -f : similar qstat,but for reservation jobs only.(-f for fill info)
+
+Reservation job id begins with 'R'.
+
+Reservation first in the unconfirmed state.
+
+Reservation job will use 1 chunk and 1 cpu.
+
+server will get the requirment, says to scheudller and says that this is the requirment. if there, then state is changed from UNCONFIRMED state to running.
+
+job array, parent in b state
+
+
+
+pbs_rsbu -R 0115 -E 0117
+
+
+whatever jobs that we submit, it lands in queue called workq.(until and unless specified).
+
+Every reservation has it own queue. the queue name is reservation id.
+
+qsub -q R2 -- /bin/sleep 100 : submit this job in the queue 'R2'. //it will in queued state incase reservation hasnt finished yet.
+//submit a job into reservation R2. if time were 10 second instead, then it will be exectue successfully,
+
+
+pbs_rdel R2: delete reservation with reservation id 'R2'.
+
+it DOES NOT matter what resources we have on cluster, but rather on the reservation.
+so if cluster has 2 ncpus and reservation has 1 , still only 1 job at a time.
+
+what happens to a job submitted in reservation ? 
+
+reservation hasnt started but confirmed : job which we have submitted can be started before reservation job
+
+reservation has started but confirmed : reservation will start first.(reservation has more priority.)
+
+queue called expressqueue highest priority, even more than reservation.
+
+pbs_rsub -R 0045 -D 60 : 60 seconds. : dont mention the end time here.
+
+reservation deleted: reservation deleted with along with jobs inside.
+
+pbs_rsub -lselect=1:ncpus=3 -R 0500 -D 300 // Reservation never in Queue state, it is in in confirmed, unconfirmed or if less resources than available in the chunk, then the reservation is deleted.
+
+
+STANDING Reservation  :  every thursday i need to run a reservation for so and so time.
+
+pbs_rsub -R 0100 -D 300 -r "FREQ=DAILY;COUNT=365" //count means that 365 days a year.
+
+TIMEZONE is to be set before we can submit standing reservation.
+
+pbs_rstat -f : full details of reservation
+
+Standing reservation beging with 'S'.
+
+incase job duration more than reservation time, pbs_rstat will give state DJ, meaning that it will forcefully delete the jobs inside it.
+
+to check which instance of the standing reservation is running,
+do pbs_rstat. then there will be something like 'index' again.
+
+index will say that which instance of the standing reservation will be running.
+count will say that how many total instances are to be run.
+
+
+
+
+
+
+
+
+ASAP Reservation : change job to reservation. since single instance, so it is converted to advance reservation.
+
+
+
+
+
+
+
+
+
+
+
+
+ 	
 
 
 
