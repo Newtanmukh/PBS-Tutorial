@@ -550,6 +550,90 @@ ASAP Reservation : change job to reservation. since single instance, so it is co
 
 
 
+##########################################################################################################################################
+
+
+HOOKS : 
+
+Hook is a block of python code that PBS executes at certain events.
+before job runs, we will get notification : one example of hook.
+once job finishes : what it should do : another example.
+
+queuejob : hook to validates and errors, rejection of wrong jobs etc. we can run multiple qhook s at queuejob
+modifyjob : some validations
+movejob : reject etc.
+runjob : some more validations in python code , etc.
+if rejected, go back to queuestate.
+
+execjob_begin
+
+
+
+non-job hooks : no need to submit a job to run these hooks :::
+before mom runs : to check health of mom like minimum hard disk of 10 GB etc
+	exechost_startup
+
+exechost_periodic: run every pediodic. checking the jobs, like who notifies that 500GB is over ,e tc.
+
+request reservation : resvsub
+
+
+
+qmgr -c "l h": list hooks.
+
+qmgr -c "s h test_periodic event=periodic"
+
+to read data from pbs,we need APIS
+
+qmgr -c "i h test_periodic application/x-python default test.py"
+qmgr -c "l h"
+qmgr -c "s h test_periodic freq=10"
+qmgr -c "s h test_periodic enabled=true"//freq=10 will be started from NOW.
+
+
+tail -f /var/spool/pbs/server_logs/202205
+
+
+qmgr -c "c h test_queuejob"
+qmgr -c "s h test_queuejob event=queuejob" //event = queuejob means that like, run this hook before the job is queued.
+
+
+
+
+
+CODE :::XXX : test.py (create anywhere.) to reject every job which is not chemistry.
+
+import pbs
+
+event=pbs.event()
+
+pbs.log(pbs.LOG_DEBUG,f"HOOK NAME : {event.hook_name}")
+job=event.job
+
+pbs.logmsg(pbs.LOG_DEBUG,"JOB PROJECT: {job.project}")
+
+if str(job.project )!= "chemistry":
+	event.reject("Non Chemistry Project. Not allowed to run")
+
+
+
+qmgr -c "i h test_queuejob application/x-python default test.py" : importthe hook.
+
+qsub -- /bin/sleep 10
+
+//Any update in hook file, import it again.
+
+qmgr -c"l h" : list the hooks.
+
+qsub -- /bin/sleep -P chemistry : submit a job in project chemistry.
+
+
+
+
+
+//qmgr -c "s h hook_name event+=runjob" : run at multiple events.
+
+
 
 
 
