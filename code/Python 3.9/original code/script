@@ -1,0 +1,6 @@
+#!/bin/bash
+gcc -I/usr/include/python3.9 code.c -lpython3.9 -o output
+./output
+rm ./output
+rm ./customer.db
+rm ./typescript
