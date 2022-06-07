@@ -1,4 +1,5 @@
 what is jobs ? request for nodes,time when to run etc. an user request for a job.   
+
 Array job : special type of jobs where it is going to run multiple sub-jobs as a part of this job.
 
 all state transitions on that queue only. default queue if queye not provided.
@@ -617,7 +618,7 @@ if str(job.project )!= "chemistry":
 
 
 
-qmgr -c "i h test_queuejob application/x-python default test.py" : importthe hook.
+qmgr -c "i h test_queuejob application/x-python default test.py" : import the hook.
 
 qsub -- /bin/sleep 10
 
@@ -635,10 +636,57 @@ qsub -- /bin/sleep -P chemistry : submit a job in project chemistry.
 
 
 
+########################################################################################################################
+
+OPENMPI : 
+
+
+
+PBS with multinode : with multiple machine PBS has been connected.
+
+MPI : Message parsing interface : it will run parallely.
+
+openMPI
+
+PBS Can run with multiple MPI Tools.
+
+multinode : one node node(firstnode) it will contact and talk to sister nodes and talk to server. server point of contact is mother node.
+
+if we check the job on another sister node, it wont show up. this is because other one is sister node.
+
+ls /opt/openmpi/bin/ : list the executables inside openmpi.
+
+/opt/openmpi/bin/mpiexec --allow-run-as-root -np 2 hostname : np means that the numbe of processors were 2 at that time
+						// it will print hostname 2 times. it will launch at the same time
+
+
+interactive job
+
+	env | grep pbs : will print the environment while in Interactive mode
+
+	cat $PBS_NODE
 
 
 
 
+/opt/openmpi_tm/bin/mpiexec --allow-run-as-root -np 2 hostname : 
+
+
+pbs_tmrsh docker hostname : alternative to openMPI.
+
+pbsdsh : also similar to pbs_tmrsh.
+
+
+
+############################################################################################################
+
+
+lselect 
+
+web API : implementation of graphql.
+get familiar with graphql API.
+
+container,docker and containerization,k3s.
 
 
 
