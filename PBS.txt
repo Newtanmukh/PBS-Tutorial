@@ -58,7 +58,11 @@ pbsnodes -av | grep jobs : will show u the list of jobs running.
 
 ps –ef | grep pbs_sched       :   will show the minischedulers running as well.
 
+qstat -q  :  print the list of all queues managed by the server.
 
+qdisable <queue_name>  : will disable the queue.
+
+qstat OR qstat -s OR qstat -sw   :   will print the running /scheduled job details.
 
 a conf file, which things are supposed to run. vi /etc/pbs.conf
 since all are 1, so all will run.
