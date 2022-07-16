@@ -53,6 +53,13 @@ rmp -i pbspro-server-2022.0.0
 
 /etc/init.d/pbs status : will give the status.
 
+
+pbsnodes -av | grep jobs : will show u the list of jobs running.
+
+ps –ef | grep pbs_sched       :   will show the minischedulers running as well.
+
+
+
 a conf file, which things are supposed to run. vi /etc/pbs.conf
 since all are 1, so all will run.
 
