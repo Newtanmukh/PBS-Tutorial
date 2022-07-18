@@ -701,7 +701,9 @@ container,docker and containerization,k3s.
 
 
 
- 	
+ 	##########################################
+	
+	create a ubuntu docker container : docker run --name mom3 --network bridge -dt -v /home/newtan/Desktop/pbs_exec:/home ubuntu:latest
 
 
 
