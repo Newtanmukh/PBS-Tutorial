@@ -20,7 +20,7 @@ RUN apt-get install -y openssh-server
 RUN useradd -m pbsadmin
 RUN mkdir pbspro
 RUN cd pbspro
-ADD $PACKAGEPATH .
+ADD ./package.deb .
 
 
 #RUN ls -l
