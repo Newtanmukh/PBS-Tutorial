@@ -40,11 +40,13 @@ number=int(input("Please enter the number of PBS Containers which you want to ma
 
 print(IPaddr+' '+hostname)
 
+#BUILDING THE DOCKER IMAGE
+###########################################################################################
 
-#Building the docker image
 build="docker build -t pbsimage:latest ."
 build=str(build)
 os.system(build)
+###########################################################################################
 
 
 add_pbs_source="export PATH=/opt/pbs/bin:$PATH"
@@ -55,15 +57,23 @@ enable_flatuid='qmgr -c"s s flatuid=1"'
 os.system(enable_flatuid)
 
 
+
+
 #Creating the number of containers.
+#########################################################################################
 for i in range(number):
 	command="docker run -td --privileged --name mom{} pbsimage:latest".format(i)    #we should run the moms in privileged mode, since we need to execute commands in it from outside.
 	command=str(command)
 	os.system(command)
+#########################################################################################
+
+
+
 
 
 
 #Updating the /etc/hosts file inside each of the running mom containers.
+#########################################################################################
 for i in range(number):
 	part1="docker exec -u 0 mom{} /bin/sh -c ".format(i)
 	part2="echo '{} {}' >> /etc/hosts".format(IPaddr,hostname)#THIS IS RUNNING FINE.
@@ -71,6 +81,8 @@ for i in range(number):
 	end=start
 	command=str(part1+start+part2+end)
 	os.system(command)
+#########################################################################################
+
 
 #NOT Needed, since we will be submitting jobs after switching to the pbsadmin user inside the mom container using the command : su - pbsadmin. after that type bash.	
 #SO < While you are already inside the as pbsadmin user, you dont need to type source /etc/profile.d/pbs.sh. it will automatically be present since the begining itself.
@@ -86,6 +98,7 @@ for i in range(number):
 
 
 #Getting the CONTAINER IP Addresses
+#########################################################################################
 x=subprocess.Popen(['docker','network','inspect','bridge'],stdout=subprocess.PIPE, stderr=subprocess.STDOUT)  #Assuming that each container gets created with the default BRIDGE network only.
 network_data,stderr = x.communicate()
 
@@ -105,6 +118,37 @@ for x in containers_data.keys():
 for i in range(len(IPs)):
 	temp=IPs[i].split('/')
 	IPs[i]=temp[0]
+#########################################################################################
+
+
+
+
+#UPDATE OF THE /etc/pbs.conf INSIDE THE RUnNIng CONTAINERS. ADD THE PBS_MOM_NODE_NAME THING.
+#docker exec -u 0 mom0 /bin/sh -c "echo 'PBS_MOM_NODE_NAME=172.17.0.2' >> /etc/pbs.conf"
+#############################################################################################
+mom_IP_mappings={}
+
+for x in containers_data.keys():
+	mom_name=containers_data[x]['Name']
+	mom_IP=containers_data[x]['IPv4Address']
+	mom_IP_mappings[mom_name]=mom_IP
+
+
+for i in range(number):
+	mom_name="mom{}".format(i)
+	mom_IP=mom_IP_mappings[mom_name]
+	mom_IP=mom_IP.split('/')[0]
+	part1="docker exec -u 0 mom{} /bin/sh -c ".format(i)
+	part2="echo 'PBS_MOM_NODE_NAME={}' >> /etc/pbs.conf".format(mom_IP)
+	start='"'
+	end=start
+	command=part1+start+part2+end
+	print(command)
+	os.system(command)
+	
+	
+	
+#############################################################################################
 
 print(IPs)
 
@@ -116,6 +160,23 @@ print(IPs)
 
 
 #Create Node for each of the running PBS COntainers.
+#############################################################################################
 for ip in IPs:
 	x=str('qmgr -c"c n {}"'.format(ip))
 	os.system(x)
+	
+	
+#STARTING THE PBS INSIDE THE CONTAINERS SO THAT THE NODES CREATED WILL BE IN FREE STATE.
+#############################################################################################
+
+for i in range(number):
+	part1="docker exec -u 0 mom{} /bin/sh -c ".format(i)
+	part2="/etc/init.d/pbs start"
+	start='"'
+	end=start
+	command=part1+start+part2+end
+	print(command)
+###############################################################################################
+	os.system(command)
+#########################################################################################
+
