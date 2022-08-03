@@ -1,3 +1,8 @@
+NOTE : 
+* I am assuming that there would be no running containers when we are running tis python script.
+* ALso, by default the containers will get added to 'bridge' network. incase the user manually add the containers to some other networks, we will have to do modifications on our code.
+
+
 run the script,test.py. it will automatically first create the docker image and will then ask you for the number of containers you wish to make using this image.
 
 
@@ -14,9 +19,3 @@ run the script,test.py. it will automatically first create the docker image and 
 5) also, make sure to restart the pbs inside the mom. only after doing all these steps, will the created nodes will be in free states.
 
 
-
-
-
-NOTE : 
-* I am assuming that there would be no running containers when we are running tis python script.
-* ALso, by default the containers will get added to 'bridge' network. incase the user manually add the containers to some other networks, we will have to do modifications on our code.
