@@ -9,6 +9,7 @@ run the script,script.py. it will automatically first create the docker image an
 
 
 
+
 1) The package name is package.deb. it is the execution debian file available on nightly(I just renamed it). 
 
 2) download it and put it at the same folder as this one where the current program is. after that you can run the program test.py. it will first build the entire image for you, and then will ask you for the number of containers you want.
